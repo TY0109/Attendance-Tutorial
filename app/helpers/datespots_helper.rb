@@ -1,0 +1,2 @@
+module DatespotsHelper
+end

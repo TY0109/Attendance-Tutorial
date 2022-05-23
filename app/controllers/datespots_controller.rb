@@ -1,0 +1,3 @@
+class DatespotsController < ApplicationController
+  
+end

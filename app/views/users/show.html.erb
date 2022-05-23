@@ -1,4 +1,5 @@
 <% provide(:title, @user.name)%>
+
 <h1><%= @user.name %>,<%= @user.email %></h1>
 <div>
   <table class="table table-bordered table-condensed user-table">
@@ -22,8 +23,6 @@
   <%= link_to "1ケ月の勤怠編集へ",attendances_edit_one_month_user_path(date: @first_day),class: "btn btn-success" %>
   <%= link_to "次月へ ⇨", user_path(date: @first_day.next_month), class: "btn btn-info" %>
 </div>
-
-
 
 <div>
   <table class="table table-bordered table-condensed table-hover" id="table-attendances">
@@ -77,6 +76,7 @@
         <td colspan="2"><%= format("%.2f", @total_working_times.to_f) %></td>
       </tr>
     </tfoot>    
-
   </table>
 </div>
+
+<%= render 'datespots/weather' %>

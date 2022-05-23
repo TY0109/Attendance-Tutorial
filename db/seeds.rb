@@ -16,3 +16,5 @@ User.create!(name: "Sample User",
                password_confirmation: password)
 end
 
+
+puts("created!")
