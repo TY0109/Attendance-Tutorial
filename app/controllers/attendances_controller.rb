@@ -43,7 +43,21 @@ class AttendancesController < ApplicationController
     redirect_to attendances_edit_one_month_user_url(date: params[:date])
   end
 
-  
+  def edit_day_request
+   @user=User.find(params[:id])
+   @attendance=@user.attendances.find(params[:attendance_id])
+  end
+
+  def update_day_request
+    debugger
+    @user=User.find(params[:id])
+    @attendance=@user.attendances.find(params[:attendance_id])
+    @attendance.started_at=params[:user][:started_at]
+    @attendance.finished_at=params[:user][:finished_at]
+    @attendance.save
+    redirect_to user_url
+  end
+
   private
 
   

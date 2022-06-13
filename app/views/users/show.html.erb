@@ -28,6 +28,7 @@
   <table class="table table-bordered table-condensed table-hover" id="table-attendances">
     <thead>
       <tr>
+        <th>編集</th>
         <th>日付</th>
         <th>曜日</th>
         <th>勤怠登録</th>
@@ -41,6 +42,7 @@
     <tbody>
       <% @attendances.each do |day| %>
         <tr>
+          <td><%=link_to "編集", attendances_edit_day_request_user_path(@user, attendance_id:day.id) %>
           <td><%= l(day.worked_on, format: :short)  %></td>
           <td><%= $days_of_the_week[day.worked_on.wday] %></td>
           <td>
