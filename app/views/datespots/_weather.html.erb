@@ -2,22 +2,24 @@
   <h3 class="weather__title">天気予報</h3>
   <div id="weather"></div>
 </div>
+
+<!--jQueryの読み込み-->
 <script type="text/javascript">
 $(function () {
-
   // 緯度経度を取得
   const latlon_url = 'https://api.openweathermap.org/geo/1.0/direct?q=<%= @datespot.name %>&appid=<%= ENV['OPEN_WEATHER_MAP_API']%>';
-
+  // latlon_urlのページに、json形式で兵庫県の経度や緯度を表示
   $.ajax({
     url: latlon_url,
     dataType: "json",
     type: 'GET',
   })
+  // 表示されるlatlon配列の一つ目の要素（オブジェクト）の中にある、latキーとlonキーの値を取得し、変数化
   .done(function (latlon) {
     const lat = latlon[0].lat
     const lon = latlon[0].lon
 
-    // 天気予報を取得
+    // 先ほどの経度と緯度をもとに天気予報を取得
     const weather_url = 'https://api.openweathermap.org/data/2.5/onecall?lat=' + lat + '&lon=' + lon + '&exclude=current,minutely,hourly,alerts&units=metric&appid=<%= ENV['OPEN_WEATHER_MAP_API']%>';
 
     $.ajax({
@@ -25,12 +27,14 @@ $(function () {
         dataType: 'json',
         type: 'GET',
       })
+      // weatherオブジェクトの7日間のデータを、insertHTMLを使って、JSONからHTML形式に変換
       .done(function (weather) {
         let insertHTML = '';
 
         for (let i = 0; i <= 6; i = i + 1) {
           insertHTML += buildHTML(weather, i);
         }
+        // id="weather"であるdivタグのところに、変換後のHTMLを貼り付ける。
         $('#weather').html(insertHTML);
       })
       .fail(function (weather) {
@@ -43,17 +47,18 @@ $(function () {
 function buildHTML(weather, i) {
   //日付、時間を取得（Dateがミリ秒なので1000倍が必要）
   const date = new Date(weather.daily[i].dt * 1000);
-  //UTCとの時差を無くす(日本は-9時間のため9を足す)
+  //UTCとの時差を無くす(日本は-9時間のため9を足す)。日付と時間の情報を持った、dateインスタンスに対して、getHoursメソッドを使い時間(hour)のみを取得し、それに9時間を足している。
   date.setHours(date.getHours() + 9);
-  //月を取得。getMonth()は0~11を返すため1を足すことによって1月~12月を返すように設定
+  //月を取得。getMonth()は0~11を返すため1を足すことによって1月~12月を返すように設定。日付と時間の情報を持った、dateインスタンスに対して、getMonthメソッドを使い月（month）のみを取得し、それに1を足している。
   const month = date.getMonth() + 1;
   //曜日の日本語化のため、配列を用意する
   const Week = new Array('(日)', '(月)', '(火)', '(水)', '(木)', '(金)', '(土)');
-  //月＋日＋曜日をdayに代入。getDay()は0~6を返すためWeek配列内のインデックスに対応した文字列を取得
+  //月＋日＋曜日をdayに代入。getDay()は0~6を返すためWeek配列内のインデックスに対応した文字列を取得（数字で返ってきた曜日を漢字に変換）
   const day = month + '/' + date.getDate() + Week[date.getDay()];
-  //天気のアイコンを取得
+  //天気のアイコンを取得。weatherオブジェクトのdailyキーの値は配列になっており、そのi個目の要素がi日目のデータである。また、その中にweatherというキーがあり、weatherキーの値も配列になっている。その一つ目の要素が天気の情報（オブジェクト）である。
   const icon = weather.daily[i].weather[0].icon;
-
+  
+  // 表示するアイコンやテキスト
   const html =
     '<div class="weather__content--report">' +
       '<img src="https://openweathermap.org/img/w/' + icon + '.png">' +
