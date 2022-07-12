@@ -9,7 +9,9 @@ RSpec.describe User, type: :model do
       )
      
     user.valid?
+    # 実行結果と期待する結果
     expect(user.errors[:name]).to include("を入力してください")
+    # 今回の期待する結果はエラーになることなので、テストが通る
   end
 
 end
