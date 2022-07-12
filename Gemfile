@@ -21,6 +21,10 @@ gem 'dotenv-rails'
 group :development, :test do
   gem 'sqlite3'
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
+
+  # rspec用に追加
+  gem 'rspec-rails'
+
 end
 
 group :development do
