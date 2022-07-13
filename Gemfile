@@ -24,6 +24,12 @@ group :development, :test do
 
   # rspec用に追加
   gem 'rspec-rails'
+  # 統合テスト（ログインの有無、フォーム入力の有無、メアドの有無、メアド一意性など)
+  gem 'capybara'
+  gem 'webdrivers'
+  # あらかじめテスト用ユーザー生成
+  gem 'factory_bot_rails'
+
 
 end
 
