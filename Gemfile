@@ -26,6 +26,7 @@ group :development, :test do
   gem 'rspec-rails'
   # 統合テスト（ログインの有無、フォーム入力の有無、メアドの有無、メアド一意性など)
   gem 'capybara'
+  # driver（ブラウザでの挙動確認のonとoff）
   gem 'webdrivers'
   # あらかじめテスト用ユーザー生成
   gem 'factory_bot_rails'

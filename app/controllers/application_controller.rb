@@ -14,6 +14,7 @@ class ApplicationController < ActionController::Base
 
   # ログイン済みのユーザーか確認します。
   def logged_in_user
+    # def logged_in? は、ヘルパーメソッド
     unless logged_in?
      store_location
      flash[:danger] = "ログインしてください。"
@@ -23,6 +24,7 @@ class ApplicationController < ActionController::Base
 
   # アクセスしたユーザーが現在ログインしているユーザーか確認します。
   def correct_user
+    # def current_user?(@user)は、ヘルパーメソッド
     redirect_to(root_url) unless current_user?(@user)
   end
 
