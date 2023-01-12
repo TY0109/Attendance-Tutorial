@@ -13,6 +13,7 @@ class UsersController < ApplicationController
   def show
    @worked_sum = @attendances.where.not(started_at: nil).count
    @datespot=JpPrefecture::Prefecture.find(28)
+   
   end
 
   def new
