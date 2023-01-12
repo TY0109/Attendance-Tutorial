@@ -31,6 +31,9 @@ group :development, :test do
   # あらかじめテスト用ユーザー生成
   gem 'factory_bot_rails'
 
+  gem 'webmock'
+  gem 'vcr'
+
 
 end
 
