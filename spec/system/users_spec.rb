@@ -3,7 +3,6 @@ require 'rails_helper'
 RSpec.describe User, type: :system do
   # FactoryBotで作成したユーザーをDBに登録
   let(:user) { create(:user) }
-  let(:other_user) { create(:user) }
   
   # CRUD
   describe 'User CRUD' do
