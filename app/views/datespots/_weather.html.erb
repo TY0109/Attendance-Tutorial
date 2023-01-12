@@ -32,6 +32,7 @@ $(function(){
         let insertHTML = '';
 
         for (let i = 0; i <= 6; i = i + 1) {
+          // 下記のbuildHTML関数を呼び出す。
           insertHTML += buildHTML(weather, i);
         }
         // id="weather"であるdivタグのところに、変換後のHTMLを貼り付ける。
@@ -43,7 +44,6 @@ $(function(){
   })
 });
 
-// 日本語で表示
 function buildHTML(weather, i) {
   //日付、時間を取得（Dateがミリ秒なので1000倍が必要）
   const date = new Date(weather.daily[i].dt * 1000);
