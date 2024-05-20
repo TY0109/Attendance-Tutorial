@@ -1,0 +1,86 @@
+<div class="weather">
+  <h3 class="weather__title">天気予報</h3>
+  <div id="weather"></div>
+</div>
+
+<!--jQueryの読み込み-->
+<script type="text/javascript">
+
+$(function(){
+  // 兵庫県の緯度経度を取得するリクエストを送るURL(geocoading APIを叩く)
+  const latlon_url = 'https://api.openweathermap.org/geo/1.0/direct?q="Hyogo"&appid=<%= ENV['OPEN_WEATHER_MAP_API']%>';
+  // リクエストをjson形式で送信
+  $.ajax({
+    url: latlon_url,
+    dataType: 'json',
+    type: 'GET'
+  })
+  // リクエストに成功すると、以下を実行
+  // 取得したlatlon配列の一つ目の要素（オブジェクト）の中にある、latキーとlonキーの値を取得し、変数化
+  .done(function (latlon) {
+    const lat = latlon[0].lat
+    const lon = latlon[0].lon
+
+    // 先ほどの経度と緯度をもとに天気予報を取得するリクエストを送るURL(onecall APIを叩く)
+    // onecall APIは、デフォルトではcurrent, minutely, hourly, daily for 7daysの情報を返すが、今回はdaily for 7daysが欲しいので他はexclude
+    const weather_url = 'https://api.openweathermap.org/data/2.5/onecall?lat=' + lat + '&lon=' + lon + '&exclude=current,minutely,hourly,alerts&units=metric&appid=<%= ENV['OPEN_WEATHER_MAP_API']%>';
+
+    $.ajax({
+      url: weather_url,
+      dataType: 'json',
+      type: 'GET'
+    })
+    // リクエストに成功すると、以下を実行
+    // weatherオブジェクトの7日間のデータを、insertHTMLを使って、JSONからHTML形式に変換
+    .done(function (weather) {
+      let insertHTML = '';
+
+      for (let i = 0; i <= 6; i = i + 1) {
+        // 下記のbuildHTML関数を呼び出す。
+        insertHTML += buildHTML(weather, i);
+      }
+      // id="weather"であるdivタグのところに、変換後のHTMLを貼り付ける。
+      $('#weather').html(insertHTML);
+    })
+    // リクエストに失敗すると、以下を実行
+    .fail(function (weather) {
+      alert('天気予報の取得に失敗しました');
+    });
+  })
+});
+
+function buildHTML(weather, i) {
+// weather = {lat: 34.4512, lon: 135.7739, timezone: 'Asia/Tokyo', timezone_offset: 32400, daily: Array(8)}
+// daily = [
+//   {dt: 1715306400, sunrise: 1715284716, sunset: 1715334484, moonrise: 1715288820, moonset: 1715344140, …}
+//   {dt: 1715392800, sunrise: 1715371066, sunset: 1715420932, moonrise: 1715378460, moonset: 1715434200, …}
+//   {dt: 1715479200, sunrise: 1715457418, sunset: 1715507379, moonrise: 1715468400, moonset: 1715523720, …}
+//   {dt: 1715565600, sunrise: 1715543771, sunset: 1715593827, moonrise: 1715558580, moonset: 0, …}
+//   {dt: 1715652000, sunrise: 1715630125, sunset: 1715680274, moonrise: 1715648760, moonset: 1715612700, …}
+//   {dt: 1715738400, sunrise: 1715716480, sunset: 1715766721, moonrise: 1715738820, moonset: 1715701200, …}
+//   {dt: 1715824800, sunrise: 1715802837, sunset: 1715853167, moonrise: 1715828700, moonset: 1715789400, …}
+//   {dt: 1715911200, sunrise: 1715889196, sunset: 1715939613, moonrise: 1715918520, moonset: 1715877360, …}
+// ]
+
+  // 日時を取得
+  const date = new Date(weather.daily[i].dt * 1000); // dtは、Unix エポック (1970 年 1 月 1 日午前 0 時 UTC からの経過秒数)と思われる
+  // 日時の情報を持ったdateインスタンスに対して、getHoursメソッドを使い時間(hour)のみを取得し、日本時間に合わせるために+9
+  date.setHours(date.getHours() + 9);
+  //月を取得。getMonth()は0~11を返すため1を足すことによって1月~12月を返すように設定。日時の情報を持ったdateインスタンスに対して、getMonthメソッドを使い月（month）のみを取得し、+1
+  const month = date.getMonth() + 1;
+  const Week = new Array('(日)', '(月)', '(火)', '(水)', '(木)', '(金)', '(土)');
+  //月＋日＋曜日をdayに代入。getDay()は0~6を返すためWeek配列内のインデックスに対応した文字列を取得（数字で返ってきた曜日を漢字に変換）
+  const day = month + '/' + date.getDate() + Week[date.getDay()];
+  //天気のアイコンを取得
+  const icon = weather.daily[i].weather[0].icon;
+  // 表示するアイコンやテキスト(戻り値)
+  const html =
+    '<div class="weather__content--report">' +
+      '<img src="https://openweathermap.org/img/w/' + icon + '.png">' +
+      '<span class="weather__content--report-date">' + day + "</span>" +
+      '<div class="weather__content--report-temp-max">' + '最高：' + Math.round(weather.daily[i].temp.max) + "℃</div>" +
+      '<span class="weather__content--report-temp-min">' + '最低：' + Math.floor(weather.daily[i].temp.min) + "℃</span>" +
+    '</div>';
+  return html
+}
+</script> 
