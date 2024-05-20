@@ -12,7 +12,7 @@ gem 'jbuilder',  '~> 2.5'
 gem 'bcrypt'
 gem 'faker'
 gem 'bootstrap-sass'
-gem 'will_paginate'
+gem 'will_paginate', '3.1.7'
 gem 'bootstrap-will_paginate'
 gem 'rails-i18n'
 # Open Weather API
