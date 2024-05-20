@@ -1,13 +1,23 @@
 source 'https://rubygems.org'
 
-gem 'rails',        '~> 5.1.6'
-gem 'puma',         '~> 3.7'
-gem 'sass-rails',   '~> 5.0'
-gem 'uglifier',     '>= 1.3.0'
+gem 'rails', '~> 5.1.6'
+gem 'puma', '~> 3.7'
+gem 'sass-rails', '~> 5.0'
+gem 'uglifier', '>= 1.3.0'
 gem 'coffee-rails', '~> 4.2'
 gem 'jquery-rails'
-gem 'turbolinks',   '~> 5'
-gem 'jbuilder',     '~> 2.5'
+gem 'turbolinks', '~> 5'
+gem 'jbuilder',  '~> 2.5'
+###### 以下追加 #####
+gem 'bcrypt'
+gem 'faker'
+gem 'bootstrap-sass'
+gem 'will_paginate'
+gem 'bootstrap-will_paginate'
+gem 'rails-i18n'
+# Open Weather API
+gem 'dotenv-rails'
+####################
 
 group :development, :test do
   gem 'sqlite3'
@@ -19,6 +29,12 @@ group :development do
   gem 'listen', '>= 3.0.5', '< 3.2'
   gem 'spring'
   gem 'spring-watcher-listen', '~> 2.0.0'
+end
+
+group :test do
+  gem 'rspec-rails'
+  gem 'capybara'
+  gem 'webdrivers'
 end
 
 # Windows環境ではtzinfo-dataというgemを含める必要があります
